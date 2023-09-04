@@ -20,10 +20,10 @@ namespace Klassi_Kirjeldamine
             this._time = time;
         }
 
-        public int Likes { get => _likes; }
-        public DateTime Time { get => _time; }
-        public string Author { get => _author; }
-        public string Content { get => _content; }
+        public int Likes => _likes;
+        public DateTime Time => _time;
+        public string Author => _author;
+        public string Content => _content;
 
         public void AddLike()
         {
@@ -32,48 +32,63 @@ namespace Klassi_Kirjeldamine
 
         public double GetPopularity()
         {
-            double elapsed = DateTime.Now.Subtract(this._time).TotalSeconds;
-            if (elapsed == 0)
+            double elapsedSeconds = (DateTime.Now - _time).TotalSeconds;
+            if (elapsedSeconds == 0)
             {
                 return _likes;
             }
-            return _likes / elapsed;
-
+            return _likes / elapsedSeconds;
         }
 
-        public string GetPopularityInfo(double esimene, double teine)
+        public static string GetPopularityInfo(Message message1, Message message2)
         {
-            string rezult = " ";
-            if (esimene > teine) { rezult = "Esimene sõnum on populaarsem kui teine:"; };
-            if(teine < esimene) { rezult = "Teine sõnum on populaarsem kui esimene"; };
-            return rezult;
-        }
+            double popularity1 = message1.GetPopularity();
+            double popularity2 = message2.GetPopularity();
 
-        public string GetPopularityInfoN(List<Message> messages)
-        {
-            string rezult = "";
-            double popularity = 0;
-            for (int i = 0; 1 < messages.Count; i++)
+            if (popularity1 > popularity2)
             {
-                if (messages[i].GetPopularity() > popularity)
-                {
-                    popularity = messages[i].GetPopularity();
-                    rezult = messages[i].Content + " on kõige populaarsem sõnum, seda kirjutas" + messages[i].Author;
-                }
-
+                return $"{message1.Author}'s message is more popular than {message2.Author}'s message.";
             }
-            return rezult;
+            else if (popularity2 > popularity1)
+            {
+                return $"{message2.Author}'s message is more popular than {message1.Author}'s message.";
+            }
+            else
+            {
+                return "Both messages have the same popularity.";
+            }
         }
-    
+
+        public static Message GetMostPopularMessage(List<Message> messages)
+        {
+            if (messages.Count == 0)
+            {
+                throw new ArgumentException("The list of messages is empty.");
+            }
+
+            Message mostPopularMessage = messages[0];
+            double highestPopularity = mostPopularMessage.GetPopularity();
+
+            foreach (Message message in messages)
+            {
+                double popularity = message.GetPopularity();
+                if (popularity > highestPopularity)
+                {
+                    mostPopularMessage = message;
+                    highestPopularity = popularity;
+                }
+            }
+
+            return mostPopularMessage;
+        }
 
         public void ShowInfo()
         {
-            Console.WriteLine(_author);
-            Console.WriteLine(_content);
-            Console.WriteLine(_time);
-            
+            Console.WriteLine($"Author: {_author}");
+            Console.WriteLine($"Content: {_content}");
+            Console.WriteLine($"Time: {_time}");
+            Console.WriteLine($"Likes: {_likes}");
         }
-
     }
 }
 
