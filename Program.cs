@@ -12,32 +12,26 @@ public class StudentMain
         public static void Main()
         {
             Message m1 = new Message("Hello", "John", DateTime.Now.AddDays(-10));
-            Console.WriteLine("----------------------");
-            m1.ShowInfo();
-            m1.AddLike();
-            Console.WriteLine(m1.GetPopularity());
-            Console.WriteLine("----------------------");
             Message m2 = new Message("Hi", "Mary", DateTime.Now.AddMinutes(-1));
-            Console.WriteLine("----------------------");
-            m2.ShowInfo();
+
+            m1.AddLike();
             m2.AddLike();
-            Console.WriteLine("----------------------");
+            m2.AddLike(); // Simulate more likes for m2
 
-            for (int i = 0; i < 1000; i++) { m2.AddLike(); }
+            Console.WriteLine("Message 1:");
+            m1.ShowInfo();
+            Console.WriteLine($"Popularity: {m1.GetPopularity()}");
 
-            Console.WriteLine(m2.GetPopularity()); 
-            Console.WriteLine(m1.GetPopularityInfo(m1.GetPopularity(), m2.GetPopularity()));
-            Message m3 = new Message("Tere", "Mari", DateTime.Now.AddDays(-1));
-            Message m4 = new Message("Guten Tag", "Hans", DateTime.Now.AddDays(-5));
-            Message m5 = new Message("Hei", "Marika", DateTime.Now.AddDays(-10));
-            List<Message> list = new List<Message>();
-            list.Add(m1);
-            list.Add(m2);
-            list.Add(m3);
-            list.Add(m4);
-            list.Add(m5);
-            Console.WriteLine(m1.GetPopularityInfoN(list));
+            Console.WriteLine("\nMessage 2:");
+            m2.ShowInfo();
+            Console.WriteLine($"Popularity: {m2.GetPopularity()}");
 
+            string popularityInfo = Message.GetPopularityInfo(m1, m2);
+            Console.WriteLine($"\nPopularity Info: {popularityInfo}");
+
+            List<Message> messages = new List<Message> { m1, m2 };
+            Message mostPopular = Message.GetMostPopularMessage(messages);
+            Console.WriteLine($"\nMost Popular Message:\n{mostPopular.Content} (Author: {mostPopular.Author})");
         }
     }
 }
